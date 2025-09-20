@@ -23,23 +23,36 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground geist-regular">
       <Header />
 
       <main className="container mx-auto px-4 py-8">
-        {!analysis ? (
-          <DocumentUpload
-            onAnalysisComplete={handleAnalysisComplete}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-          />
-        ) : (
-          <DocumentAnalysis
-            analysis={analysis}
-            documentText={documentText}
-            onReset={handleReset}
-          />
-        )}
+        <div className="mx-auto max-w-6xl">
+          {!analysis ? (
+            <div className="space-y-8">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold tracking-tight geist-bold">
+                  Legal Document Analysis
+                </h2>
+                <p className="text-xl text-muted-foreground geist-regular max-w-2xl mx-auto">
+                  Upload your legal documents and get instant AI-powered
+                  analysis to understand what you're signing
+                </p>
+              </div>
+              <DocumentUpload
+                onAnalysisComplete={handleAnalysisComplete}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            </div>
+          ) : (
+            <DocumentAnalysis
+              analysis={analysis}
+              documentText={documentText}
+              onReset={handleReset}
+            />
+          )}
+        </div>
       </main>
     </div>
   );

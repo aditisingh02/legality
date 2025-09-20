@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { Upload, FileText, Loader2 } from "lucide-react";
+import { Upload, FileText, Loader2, Sparkles } from "lucide-react";
+import { Button } from "./ui/button";
 import type { DocumentAnalysisResult } from "../types";
 
 interface DocumentUploadProps {
@@ -110,57 +111,48 @@ export function DocumentUpload({
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600 mb-4" />
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <div className="relative mb-6">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <Sparkles className="h-6 w-6 text-primary absolute -top-2 -right-2 animate-pulse" />
+        </div>
+        <h2 className="text-xl font-semibold text-foreground mb-2 geist-semibold">
           Analyzing Document
         </h2>
-        <p className="text-gray-600">This may take a few moments...</p>
+        <p className="text-muted-foreground geist-regular">
+          This may take a few moments...
+        </p>
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Upload Your Legal Document
-        </h2>
-        <p className="text-lg text-gray-600">
-          Get instant plain-language summaries, risk assessments, and
-          explanations
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex gap-4 mb-6">
-          <button
+      <div className="bg-card rounded-xl shadow-sm border border-border p-8">
+        <div className="flex gap-2 mb-8">
+          <Button
             onClick={() => setUploadMethod("file")}
-            className={`px-4 py-2 rounded-lg font-medium ${
-              uploadMethod === "file"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            variant={uploadMethod === "file" ? "default" : "outline"}
+            className="geist-medium"
           >
+            <Upload className="h-4 w-4 mr-2" />
             Upload File
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setUploadMethod("text")}
-            className={`px-4 py-2 rounded-lg font-medium ${
-              uploadMethod === "text"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            variant={uploadMethod === "text" ? "default" : "outline"}
+            className="geist-medium"
           >
+            <FileText className="h-4 w-4 mr-2" />
             Paste Text
-          </button>
+          </Button>
         </div>
 
         {uploadMethod === "file" ? (
           <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+            className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 ${
               dragActive
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-300 hover:border-gray-400"
+                ? "border-primary bg-primary/5 scale-[1.02]"
+                : "border-border hover:border-primary/50 hover:bg-muted/50"
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -175,37 +167,49 @@ export function DocumentUpload({
               className="hidden"
             />
 
-            <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <div className="relative inline-block mb-6">
+              <Upload className="h-16 w-16 text-muted-foreground mx-auto" />
+              <div className="absolute -top-2 -right-2 h-6 w-6 bg-primary rounded-full flex items-center justify-center">
+                <Sparkles className="h-3 w-3 text-primary-foreground" />
+              </div>
+            </div>
+
+            <h3 className="text-xl font-semibold text-foreground mb-2 geist-semibold">
               Drop your document here
             </h3>
-            <p className="text-gray-600 mb-4">or click to browse files</p>
-            <button
+            <p className="text-muted-foreground mb-6 geist-regular">
+              or click to browse files
+            </p>
+
+            <Button
               onClick={() => fileInputRef.current?.click()}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              size="lg"
+              className="geist-medium"
             >
               Choose File
-            </button>
-            <p className="text-sm text-gray-500 mt-4">
+            </Button>
+
+            <p className="text-sm text-muted-foreground mt-6 geist-regular">
               Supports DOCX and TXT files (max 10MB). PDF support coming soon.
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <textarea
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               placeholder="Paste your legal document text here..."
-              className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full h-64 p-4 bg-background border border-border rounded-xl resize-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors geist-regular text-foreground placeholder:text-muted-foreground"
             />
-            <button
+            <Button
               onClick={handleTextSubmit}
               disabled={!textInput.trim()}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              size="lg"
+              className="w-full geist-medium"
             >
-              <FileText className="h-5 w-5 inline mr-2" />
+              <Sparkles className="h-5 w-5 mr-2" />
               Analyze Document
-            </button>
+            </Button>
           </div>
         )}
       </div>

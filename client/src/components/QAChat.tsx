@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Send, MessageCircle, Loader2 } from "lucide-react";
+import { Send, MessageCircle, Loader2, Sparkles } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface QAChatProps {
   documentText: string;
@@ -83,22 +84,23 @@ export function QAChat({ documentText }: QAChatProps) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <h2 className="text-3xl font-bold text-foreground mb-8 geist-bold">
         Ask Questions About Your Document
       </h2>
 
       {messages.length === 0 && (
-        <div className="mb-6">
-          <p className="text-gray-600 mb-4">
+        <div className="mb-8">
+          <p className="text-muted-foreground mb-6 geist-regular">
             Try asking one of these common questions:
           </p>
-          <div className="space-y-2">
+          <div className="grid gap-3">
             {suggestedQuestions.map((question, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentQuestion(question)}
-                className="block w-full text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm text-gray-700 transition-colors"
+                className="text-left p-4 bg-muted/30 hover:bg-muted/50 rounded-xl text-sm text-foreground transition-all hover:scale-[1.02] geist-regular border border-border"
               >
+                <Sparkles className="h-4 w-4 inline mr-2 text-primary" />
                 {question}
               </button>
             ))}
@@ -106,7 +108,7 @@ export function QAChat({ documentText }: QAChatProps) {
         </div>
       )}
 
-      <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+      <div className="space-y-6 mb-8 max-h-96 overflow-y-auto">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -115,26 +117,28 @@ export function QAChat({ documentText }: QAChatProps) {
             }`}
           >
             <div
-              className={`max-w-3xl p-4 rounded-lg ${
+              className={`max-w-3xl p-5 rounded-xl ${
                 message.type === "question"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-900"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted/50 text-foreground border border-border"
               }`}
             >
               {message.type === "answer" && (
-                <div className="flex items-center gap-2 mb-2">
-                  <MessageCircle className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-600">
+                <div className="flex items-center gap-2 mb-3">
+                  <MessageCircle className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium text-primary geist-medium">
                     Legality AI
                   </span>
                 </div>
               )}
-              <p className="whitespace-pre-wrap">{message.content}</p>
+              <p className="whitespace-pre-wrap leading-relaxed geist-regular">
+                {message.content}
+              </p>
               <div
-                className={`text-xs mt-2 ${
+                className={`text-xs mt-3 geist-regular ${
                   message.type === "question"
-                    ? "text-blue-100"
-                    : "text-gray-500"
+                    ? "text-primary-foreground/70"
+                    : "text-muted-foreground"
                 }`}
               >
                 {message.timestamp.toLocaleTimeString()}
@@ -145,10 +149,10 @@ export function QAChat({ documentText }: QAChatProps) {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                <span className="text-sm text-gray-600">
+            <div className="bg-muted/50 p-5 rounded-xl border border-border">
+              <div className="flex items-center gap-3">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-sm text-muted-foreground geist-regular">
                   Analyzing document...
                 </span>
               </div>
@@ -157,22 +161,23 @@ export function QAChat({ documentText }: QAChatProps) {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex gap-3">
         <input
           type="text"
           value={currentQuestion}
           onChange={(e) => setCurrentQuestion(e.target.value)}
           placeholder="Ask a question about your document..."
-          className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="flex-1 p-4 bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-colors geist-regular text-foreground placeholder:text-muted-foreground"
           disabled={isLoading}
         />
-        <button
+        <Button
           type="submit"
           disabled={!currentQuestion.trim() || isLoading}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          size="lg"
+          className="px-6 geist-medium"
         >
           <Send className="h-5 w-5" />
-        </button>
+        </Button>
       </form>
     </div>
   );
