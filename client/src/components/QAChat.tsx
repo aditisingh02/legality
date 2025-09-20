@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Send, MessageCircle, Loader2, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 
 interface QAChatProps {
   documentText: string;
@@ -17,6 +18,83 @@ export function QAChat({ documentText }: QAChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Generate context-aware questions when component mounts
+  useEffect(() => {
+    const generateQuestions = async () => {
+      if (!documentText.trim()) {
+        setLoadingQuestions(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:3001/api/generate-questions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ documentText }),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setSuggestedQuestions(data.questions || []);
+        } else {
+          console.error("Failed to generate questions");
+          // Use fallback questions
+          setSuggestedQuestions([
+            "What are my main obligations under this agreement?",
+            "What happens if I need to terminate this agreement?",
+            "Are there any fees or penalties I should be aware of?",
+            "What are the notice requirements in this document?",
+            "Are there any automatic renewal clauses?",
+          ]);
+        }
+      } catch (error) {
+        console.error("Error generating questions:", error);
+        // Use fallback questions
+        setSuggestedQuestions([
+          "What are my main obligations under this agreement?",
+          "What happens if I need to terminate this agreement?",
+          "Are there any fees or penalties I should be aware of?",
+          "What are the notice requirements in this document?",
+          "Are there any automatic renewal clauses?",
+        ]);
+      } finally {
+        setLoadingQuestions(false);
+      }
+    };
+
+    generateQuestions();
+  }, [documentText]);
+
+  // Scroll to bottom function with smooth behavior
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "nearest",
+    });
+  };
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Auto-scroll when loading state changes (for loading indicator)
+  useEffect(() => {
+    if (isLoading) {
+      // Small delay to ensure loading message is rendered
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +110,9 @@ export function QAChat({ documentText }: QAChatProps) {
     setMessages((prev) => [...prev, questionMessage]);
     setCurrentQuestion("");
     setIsLoading(true);
+
+    // Scroll to show the new question immediately
+    setTimeout(scrollToBottom, 50);
 
     try {
       const response = await fetch("http://localhost:3001/api/ask-question", {
@@ -74,14 +155,6 @@ export function QAChat({ documentText }: QAChatProps) {
     }
   };
 
-  const suggestedQuestions = [
-    "What happens if I terminate this agreement early?",
-    "What are my main obligations under this contract?",
-    "Are there any automatic renewal clauses?",
-    "What fees or penalties should I be aware of?",
-    "What are the notice requirements?",
-  ];
-
   return (
     <div>
       <h2 className="text-3xl font-bold text-foreground mb-8 geist-bold">
@@ -90,25 +163,40 @@ export function QAChat({ documentText }: QAChatProps) {
 
       {messages.length === 0 && (
         <div className="mb-8">
-          <p className="text-muted-foreground mb-6 geist-regular">
-            Try asking one of these common questions:
-          </p>
-          <div className="grid gap-3">
-            {suggestedQuestions.map((question, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentQuestion(question)}
-                className="text-left p-4 bg-muted/30 hover:bg-muted/50 rounded-xl text-sm text-foreground transition-all hover:scale-[1.02] geist-regular border border-border"
-              >
-                <Sparkles className="h-4 w-4 inline mr-2 text-primary" />
-                {question}
-              </button>
-            ))}
-          </div>
+          {loadingQuestions ? (
+            <div className="flex items-center gap-3 mb-6">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <p className="text-muted-foreground geist-regular">
+                Generating relevant questions for your document...
+              </p>
+            </div>
+          ) : (
+            <>
+              <p className="text-muted-foreground mb-6 geist-regular">
+                Try asking one of these questions specific to your document:
+              </p>
+              <div className="grid gap-3">
+                {suggestedQuestions.map((question, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setCurrentQuestion(question);
+                      // Small delay to ensure the input is updated, then scroll to it
+                      setTimeout(scrollToBottom, 100);
+                    }}
+                    className="text-left p-4 bg-muted/30 hover:bg-muted/50 rounded-xl text-sm text-foreground transition-all hover:scale-[1.02] geist-regular border border-border"
+                  >
+                    <Sparkles className="h-4 w-4 inline mr-2 text-primary" />
+                    {question}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 
-      <div className="space-y-6 mb-8 max-h-96 overflow-y-auto">
+      <div className="space-y-6 mb-8 max-h-96 overflow-y-auto scroll-smooth">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -131,9 +219,16 @@ export function QAChat({ documentText }: QAChatProps) {
                   </span>
                 </div>
               )}
-              <p className="whitespace-pre-wrap leading-relaxed geist-regular">
-                {message.content}
-              </p>
+              {message.type === "answer" ? (
+                <MarkdownRenderer
+                  content={message.content}
+                  className="geist-regular"
+                />
+              ) : (
+                <p className="whitespace-pre-wrap leading-relaxed geist-regular">
+                  {message.content}
+                </p>
+              )}
               <div
                 className={`text-xs mt-3 geist-regular ${
                   message.type === "question"
@@ -159,6 +254,8 @@ export function QAChat({ documentText }: QAChatProps) {
             </div>
           </div>
         )}
+        {/* Invisible element for auto-scroll target */}
+        <div ref={messagesEndRef} />
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-3">

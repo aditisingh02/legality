@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   ArrowLeft,
-  AlertTriangle,
   MessageCircle,
   Book,
   Shield,
@@ -12,6 +11,7 @@ import {
 import { Button } from "./ui/button";
 import type { DocumentAnalysisResult } from "../types";
 import { QAChat } from "./QAChat";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 
 interface DocumentAnalysisProps {
   analysis: DocumentAnalysisResult;
@@ -132,9 +132,11 @@ export function DocumentAnalysis({
                     className="flex items-start gap-4 p-4 rounded-lg bg-muted/30"
                   >
                     <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0" />
-                    <p className="text-foreground leading-relaxed geist-regular">
-                      {point.replace(/^[•\-]\s*/, "")}
-                    </p>
+                    <div className="text-foreground leading-relaxed geist-regular">
+                      <MarkdownRenderer
+                        content={point.replace(/^[•\-]\s*/, "")}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -173,13 +175,13 @@ export function DocumentAnalysis({
                       {getRiskIcon(risk.riskLevel)}
                       <div className="flex-1">
                         <h3 className="font-semibold mb-3 text-lg geist-semibold">
-                          {risk.clause}
+                          <MarkdownRenderer content={risk.clause} />
                         </h3>
-                        <p className="mb-4 leading-relaxed geist-regular">
-                          {risk.explanation}
-                        </p>
+                        <div className="mb-4 leading-relaxed geist-regular">
+                          <MarkdownRenderer content={risk.explanation} />
+                        </div>
                         <blockquote className="border-l-4 border-border pl-4 italic text-muted-foreground geist-regular">
-                          "{risk.quote}"
+                          "<MarkdownRenderer content={risk.quote} />"
                         </blockquote>
                       </div>
                     </div>
@@ -201,14 +203,14 @@ export function DocumentAnalysis({
                     className="border border-border rounded-xl p-6 bg-muted/20 hover:bg-muted/30 transition-colors"
                   >
                     <h3 className="font-semibold text-xl text-foreground mb-3 geist-semibold">
-                      {term.term}
+                      <MarkdownRenderer content={term.term} />
                     </h3>
-                    <p className="text-foreground mb-3 leading-relaxed geist-regular">
-                      {term.definition}
-                    </p>
-                    <p className="text-sm text-muted-foreground italic geist-regular">
-                      Context: {term.context}
-                    </p>
+                    <div className="text-foreground mb-3 leading-relaxed geist-regular">
+                      <MarkdownRenderer content={term.definition} />
+                    </div>
+                    <div className="text-sm text-muted-foreground italic geist-regular">
+                      Context: <MarkdownRenderer content={term.context} />
+                    </div>
                   </div>
                 ))}
               </div>

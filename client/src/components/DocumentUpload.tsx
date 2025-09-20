@@ -68,7 +68,7 @@ export function DocumentUpload({
       }
 
       const data = await response.json();
-      onAnalysisComplete(data.analysis, ""); // We don't have the original text from file upload
+      onAnalysisComplete(data.analysis, data.documentText || "");
     } catch (error) {
       console.error("Error analyzing document:", error);
       alert("Failed to analyze document. Please try again.");
@@ -162,7 +162,7 @@ export function DocumentUpload({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".docx,.txt"
+              accept=".pdf,.docx,.txt"
               onChange={handleFileInput}
               className="hidden"
             />
@@ -190,7 +190,7 @@ export function DocumentUpload({
             </Button>
 
             <p className="text-sm text-muted-foreground mt-6 geist-regular">
-              Supports DOCX and TXT files (max 10MB). PDF support coming soon.
+              Supports PDF, DOCX, and TXT files (max 10MB)
             </p>
           </div>
         ) : (

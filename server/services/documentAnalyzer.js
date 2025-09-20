@@ -29,6 +29,11 @@ async function generateSummary(model, documentText) {
 Document:
 ${documentText}
 
+Instructions:
+- Use **bold** text to emphasize key terms, amounts, and deadlines
+- Use *italics* for legal terminology and document references
+- Make each point clear and actionable
+
 Provide ONLY the bullet points, no additional text:`;
 
   const result = await model.generateContent(prompt);
@@ -72,16 +77,16 @@ ${documentText}
 
 For each risk found, provide:
 1. Risk Level: HIGH, MEDIUM, or LOW
-2. Clause Description: Brief description of the problematic clause
-3. Risk Explanation: Why this is risky in plain language
+2. Clause Description: Brief description of the problematic clause (use **bold** for key terms)
+3. Risk Explanation: Why this is risky in plain language (use **bold** for important points, *italics* for legal terms)
 4. Quote: Direct quote from the document
 
 Format as JSON array:
 [
   {
     "riskLevel": "HIGH|MEDIUM|LOW",
-    "clause": "Brief description",
-    "explanation": "Why this is risky",
+    "clause": "Brief description with **bold** key terms",
+    "explanation": "Why this is risky with **bold** important points and *italic* legal terms",
     "quote": "Direct quote from document"
   }
 ]
@@ -128,15 +133,15 @@ ${documentText}
 
 For each term, provide:
 1. Term: The legal term or jargon
-2. Definition: Simple, plain-English explanation
-3. Context: How it's used in this document
+2. Definition: Simple, plain-English explanation (use **bold** for key concepts, *italics* for examples)
+3. Context: How it's used in this document (use **bold** for important usage details)
 
 Format as JSON array:
 [
   {
     "term": "legal term",
-    "definition": "simple explanation",
-    "context": "how it's used in this document"
+    "definition": "simple explanation with **bold** key concepts and *italic* examples",
+    "context": "how it's used in this document with **bold** important details"
   }
 ]
 
