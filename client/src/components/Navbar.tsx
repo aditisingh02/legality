@@ -46,25 +46,25 @@ export function Navbar({ onGetStarted }: NavbarProps) {
               <div className="hidden md:flex items-center space-x-8">
                 <button
                   onClick={() => scrollToSection("about")}
-                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium"
+                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium cursor-pointer"
                 >
                   About
                 </button>
                 <button
                   onClick={() => scrollToSection("features")}
-                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium"
+                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium cursor-pointer"
                 >
                   Features
                 </button>
                 <button
                   onClick={() => scrollToSection("services")}
-                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium"
+                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium cursor-pointer"
                 >
                   Services
                 </button>
                 <button
                   onClick={() => scrollToSection("faq")}
-                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium"
+                  className="text-black/90 hover:text-black transition-colors duration-200 font-medium cursor-pointer"
                 >
                   FAQ
                 </button>
@@ -74,7 +74,7 @@ export function Navbar({ onGetStarted }: NavbarProps) {
               <div className="hidden md:flex items-center space-x-4">
                 <button
                   onClick={onGetStarted}
-                  className="relative group px-6 py-2.5 bg-black text-white font-medium rounded-4xl border border-white/20 hover:from-blue-500/30 hover:to-purple-600/30 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="relative group px-6 py-2.5 bg-black text-white hover:text-orange-200 font-medium rounded-4xl border border-white/20 hover:from-blue-500/30 hover:to-purple-600/30 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
                 >
                   <span className="relative z-10">Get Started</span>
                 </button>

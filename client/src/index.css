@@ -175,3 +175,10 @@
   font-weight: 700;
   font-style: normal;
 }
+
+.playfair-display-italic {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: italic;
+}

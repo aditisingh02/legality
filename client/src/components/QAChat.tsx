@@ -156,7 +156,7 @@ export function QAChat({ documentText }: QAChatProps) {
   };
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <h2 className="text-3xl font-bold text-foreground mb-8 geist-bold">
         Ask Questions About Your Document
       </h2>
@@ -196,7 +196,7 @@ export function QAChat({ documentText }: QAChatProps) {
         </div>
       )}
 
-      <div className="space-y-6 mb-8 max-h-96 overflow-y-auto scroll-smooth">
+      <div className="flex-1 space-y-6 mb-6 max-h-96 overflow-y-auto scroll-smooth pb-4">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -258,24 +258,26 @@ export function QAChat({ documentText }: QAChatProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-3">
-        <input
-          type="text"
-          value={currentQuestion}
-          onChange={(e) => setCurrentQuestion(e.target.value)}
-          placeholder="Ask a question about your document..."
-          className="flex-1 p-4 bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-colors geist-regular text-foreground placeholder:text-muted-foreground"
-          disabled={isLoading}
-        />
-        <Button
-          type="submit"
-          disabled={!currentQuestion.trim() || isLoading}
-          size="lg"
-          className="px-6 geist-medium"
-        >
-          <Send className="h-5 w-5" />
-        </Button>
-      </form>
+      <div className="mt-auto pt-4 border-t border-border">
+        <form onSubmit={handleSubmit} className="flex gap-3">
+          <input
+            type="text"
+            value={currentQuestion}
+            onChange={(e) => setCurrentQuestion(e.target.value)}
+            placeholder="Ask a question about your document..."
+            className="flex-1 p-4 bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-colors geist-regular text-foreground placeholder:text-muted-foreground"
+            disabled={isLoading}
+          />
+          <Button
+            type="submit"
+            disabled={!currentQuestion.trim() || isLoading}
+            size="lg"
+            className="p-4 geist-medium"
+          >
+            <Send className="h-5 w-5" />
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

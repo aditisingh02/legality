@@ -165,8 +165,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
 
             <h1 className="text-3xl md:text-5xl font-bold text-black leading-tight">
               Legal solutions for the{" "}
-              <span className="text-gray-600">digital age</span> that you can
-              trust
+              <span className="text-black playfair-display-italic">
+                digital age
+              </span>{" "}
+              that you can trust
             </h1>
 
             <p className="text-base text-gray-700 max-w-2xl mx-auto leading-relaxed">
@@ -178,12 +180,12 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={onGetStarted}
-                className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors inline-flex items-center justify-center"
+                className="bg-black hover:text-orange-200 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors inline-flex items-center justify-center cursor-pointer"
               >
                 Get Started
                 <ArrowRight className="h-4 w-4 ml-2" />
               </button>
-              <button className="border border-black text-black hover:bg-black hover:text-white px-6 py-3 rounded-full text-sm font-medium transition-colors">
+              <button className="border border-black text-black hover:bg-black hover:text-white px-6 py-3 rounded-full text-sm font-medium transition-colors cursor-pointer">
                 View Demo
               </button>
             </div>
@@ -214,41 +216,53 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="container mx-auto max-w-6xl">
           <div
             ref={aboutRef}
-            className={`bg-black/80 rounded-3xl p-16 text-center transition-all duration-1000 ${
+            className={`bg-black rounded-3xl p-16 text-center transition-all duration-1000 relative overflow-hidden ${
               aboutVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full text-sm font-medium mb-8">
-                ABOUT US
+            {/* Background Design SVG */}
+            <div className="absolute inset-0 opacity-20">
+              <img
+                src="/design.svg"
+                alt="Background Design"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10">
+              <div className="text-center">
+                <div className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full text-sm font-medium mb-8">
+                  ABOUT US
+                </div>
+                <h2
+                  className={`text-4xl md:text-5xl font-bold text-white mb-8 transition-all duration-1000 delay-300 playfair-display-italic ${
+                    aboutVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-10"
+                  }`}
+                >
+                  Who are we
+                </h2>
+                <p
+                  className={`text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 delay-500 ${
+                    aboutVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-10"
+                  }`}
+                >
+                  <span className="text-white font-medium">
+                    Blackstone Legal Group is a Boston-based law firm offering
+                    family law, immigration services, and legal aid for
+                    vulnerable communities. Founded in 2017 by two partners with
+                    public sector backgrounds, the firm built a strong local
+                    reputation through backgrounds, the firm built a strong
+                    local reputation through referrals and word of mouth.
+                  </span>
+                </p>
               </div>
-              <h2
-                className={`text-4xl md:text-5xl font-bold text-white mb-8 transition-all duration-1000 delay-300 ${
-                  aboutVisible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-              >
-                Who are we
-              </h2>
-              <p
-                className={`text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 delay-500 ${
-                  aboutVisible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-              >
-                <span className="text-white font-medium">
-                  Blackstone Legal Group is a Boston-based law firm offering
-                  family law, immigration services, and legal aid for vulnerable
-                  communities. Founded in 2017 by two partners with public
-                  sector backgrounds, the firm built a strong local reputation
-                  through backgrounds, the firm built a strong local reputation
-                  through referrals and word of mouth.
-                </span>
-              </p>
             </div>
 
             {/* <div className="grid md:grid-cols-3 gap-8">
@@ -306,7 +320,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
                 Delivering practical solutions through{" "}
-                <span className="text-gray-600">trusted AI analysis</span>
+                <span className="text-black playfair-display-italic text-shadow-black">
+                  trusted AI analysis
+                </span>
               </h2>
               <p className="text-sm text-gray-700 leading-relaxed">
                 Transform complex legal documents into clear, actionable
@@ -353,7 +369,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
               Everything you need for{" "}
-              <span className="text-gray-600">cutting-edge</span> legal analysis
+              <span className="text-black playfair-display-italic">
+                cutting-edge
+              </span>{" "}
+              legal analysis
             </h2>
             <p className="text-sm text-gray-700 max-w-2xl mx-auto leading-relaxed">
               Comprehensive document analysis powered by advanced AI to help you
@@ -393,7 +412,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium mb-4">
               ANSWERS FOR YOUR QUESTIONS
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 playfair-display-italic">
               Frequently asked questions
             </h2>
             <p className="text-sm text-gray-700">
@@ -461,7 +480,11 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 {/* Text content */}
                 <div className="lg:col-span-3 text-center lg:text-left">
                   <h2 className="text-xl md:text-2xl font-bold text-white mb-3">
-                    Start analyzing your legal documents today
+                    Start analyzing your{" "}
+                    <span className="text-white playfair-display-italic">
+                      legal documents
+                    </span>{" "}
+                    today
                   </h2>
                   <p className="text-sm text-gray-300 leading-relaxed">
                     Join thousands of satisfied users who trust our AI-powered

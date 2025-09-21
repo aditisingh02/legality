@@ -9,6 +9,10 @@ export function MarkdownRenderer({
   content,
   className = "",
 }: MarkdownRendererProps) {
+  const isSummaryContent = className.includes("summary-content");
+  const isRiskContent = className.includes("risk-content");
+  const shouldDisableLists = isSummaryContent || isRiskContent;
+
   return (
     <div className={`markdown-content ${className}`}>
       <ReactMarkdown
@@ -27,18 +31,31 @@ export function MarkdownRenderer({
           em: ({ children }) => (
             <em className="italic text-foreground">{children}</em>
           ),
-          // Style unordered lists
-          ul: ({ children }) => (
-            <ul className="list-disc list-inside space-y-1 ml-2">{children}</ul>
-          ),
-          // Style ordered lists
-          ol: ({ children }) => (
-            <ol className="list-decimal list-inside space-y-1 ml-2">
-              {children}
-            </ol>
-          ),
-          // Style list items
-          li: ({ children }) => <li className="text-foreground">{children}</li>,
+          // Style unordered lists - disable for summary/risk content
+          ul: ({ children }) =>
+            shouldDisableLists ? (
+              <div className="space-y-1">{children}</div>
+            ) : (
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                {children}
+              </ul>
+            ),
+          // Style ordered lists - disable for summary/risk content
+          ol: ({ children }) =>
+            shouldDisableLists ? (
+              <div className="space-y-1">{children}</div>
+            ) : (
+              <ol className="list-decimal list-inside space-y-1 ml-2">
+                {children}
+              </ol>
+            ),
+          // Style list items - remove bullets for summary/risk content
+          li: ({ children }) =>
+            shouldDisableLists ? (
+              <div className="text-foreground">{children}</div>
+            ) : (
+              <li className="text-foreground">{children}</li>
+            ),
           // Style inline code
           code: ({ children }) => (
             <code className="bg-muted px-1 py-0.5 rounded text-sm font-mono text-foreground">

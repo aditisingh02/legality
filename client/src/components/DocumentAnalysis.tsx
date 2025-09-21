@@ -1,13 +1,4 @@
-import { useState } from "react";
-import {
-  ArrowLeft,
-  MessageCircle,
-  Book,
-  Shield,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-} from "lucide-react";
+import { ArrowLeft, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import type { DocumentAnalysisResult } from "../types";
 import { QAChat } from "./QAChat";
@@ -17,17 +8,15 @@ interface DocumentAnalysisProps {
   analysis: DocumentAnalysisResult;
   documentText: string;
   onReset: () => void;
+  activeTab?: string;
 }
 
 export function DocumentAnalysis({
   analysis,
   documentText,
   onReset,
+  activeTab = "summary",
 }: DocumentAnalysisProps) {
-  const [activeTab, setActiveTab] = useState<
-    "summary" | "risks" | "glossary" | "chat"
-  >("summary");
-
   const getRiskColor = (level: "HIGH" | "MEDIUM" | "LOW") => {
     switch (level) {
       case "HIGH":
@@ -71,54 +60,6 @@ export function DocumentAnalysis({
       </div>
 
       <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-        <div className="border-b border-border bg-muted/30">
-          <nav className="flex">
-            <button
-              onClick={() => setActiveTab("summary")}
-              className={`px-6 py-4 font-medium transition-all geist-medium ${
-                activeTab === "summary"
-                  ? "border-b-2 border-primary text-primary bg-primary/5"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}
-            >
-              Summary
-            </button>
-            <button
-              onClick={() => setActiveTab("risks")}
-              className={`px-6 py-4 font-medium transition-all geist-medium ${
-                activeTab === "risks"
-                  ? "border-b-2 border-primary text-primary bg-primary/5"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}
-            >
-              <Shield className="h-4 w-4 inline mr-2" />
-              Risk Assessment
-            </button>
-            <button
-              onClick={() => setActiveTab("glossary")}
-              className={`px-6 py-4 font-medium transition-all geist-medium ${
-                activeTab === "glossary"
-                  ? "border-b-2 border-primary text-primary bg-primary/5"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}
-            >
-              <Book className="h-4 w-4 inline mr-2" />
-              Glossary
-            </button>
-            <button
-              onClick={() => setActiveTab("chat")}
-              className={`px-6 py-4 font-medium transition-all geist-medium ${
-                activeTab === "chat"
-                  ? "border-b-2 border-primary text-primary bg-primary/5"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}
-            >
-              <MessageCircle className="h-4 w-4 inline mr-2" />
-              Ask Questions
-            </button>
-          </nav>
-        </div>
-
         <div className="p-8">
           {activeTab === "summary" && (
             <div>
@@ -134,7 +75,10 @@ export function DocumentAnalysis({
                     <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0" />
                     <div className="text-foreground leading-relaxed geist-regular">
                       <MarkdownRenderer
-                        content={point.replace(/^[•\-]\s*/, "")}
+                        content={point
+                          .replace(/^[\s]*[•\-\*\+]\s*/, "")
+                          .replace(/^\d+\.\s*/, "")}
+                        className="summary-content"
                       />
                     </div>
                   </div>
@@ -143,7 +87,7 @@ export function DocumentAnalysis({
             </div>
           )}
 
-          {activeTab === "risks" && (
+          {activeTab === "risk" && (
             <div>
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl font-bold text-foreground geist-bold">
@@ -174,15 +118,30 @@ export function DocumentAnalysis({
                     <div className="flex items-start gap-4">
                       {getRiskIcon(risk.riskLevel)}
                       <div className="flex-1">
-                        <h3 className="font-semibold mb-3 text-lg geist-semibold">
-                          <MarkdownRenderer content={risk.clause} />
-                        </h3>
-                        <div className="mb-4 leading-relaxed geist-regular">
-                          <MarkdownRenderer content={risk.explanation} />
+                        <div className="font-semibold mb-3 text-lg geist-semibold">
+                          <MarkdownRenderer
+                            content={risk.clause
+                              .replace(/^[\s]*[•\-\*\+]\s*/, "")
+                              .replace(/^\d+\.\s*/, "")}
+                            className="risk-content"
+                          />
                         </div>
-                        <blockquote className="border-l-4 border-border pl-4 italic text-muted-foreground geist-regular">
-                          "<MarkdownRenderer content={risk.quote} />"
-                        </blockquote>
+                        <div className="mb-4 leading-relaxed geist-regular">
+                          <MarkdownRenderer
+                            content={risk.explanation
+                              .replace(/^[\s]*[•\-\*\+]\s*/, "")
+                              .replace(/^\d+\.\s*/, "")}
+                            className="risk-content"
+                          />
+                        </div>
+                        <div className="border-l-4 border-border pl-4 italic text-muted-foreground geist-regular">
+                          <MarkdownRenderer
+                            content={risk.quote
+                              .replace(/^[\s]*[•\-\*\+]\s*/, "")
+                              .replace(/^\d+\.\s*/, "")}
+                            className="risk-content"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -217,7 +176,11 @@ export function DocumentAnalysis({
             </div>
           )}
 
-          {activeTab === "chat" && <QAChat documentText={documentText} />}
+          {activeTab === "questions" && (
+            <div>
+              <QAChat documentText={documentText} />
+            </div>
+          )}
         </div>
       </div>
     </div>

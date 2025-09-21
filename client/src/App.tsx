@@ -12,6 +12,7 @@ function App() {
   const [analysis, setAnalysis] = useState<DocumentAnalysisResult | null>(null);
   const [documentText, setDocumentText] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("summary");
 
   const handleAnalysisComplete = (
     result: DocumentAnalysisResult,
@@ -40,14 +41,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground geist-regular">
-      {currentView !== "landing" && <Header onBackToHome={handleBackToHome} />}
+      {currentView !== "landing" && (
+        <Header
+          onBackToHome={handleBackToHome}
+          showTabs={currentView === "analysis"}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      )}
 
       {currentView === "landing" && (
         <LandingPage onGetStarted={handleGetStarted} />
       )}
 
       {currentView === "upload" && (
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8 pt-32">
           <div className="mx-auto max-w-6xl">
             <div className="space-y-8">
               <div className="text-center space-y-4">
@@ -70,12 +78,13 @@ function App() {
       )}
 
       {currentView === "analysis" && analysis && (
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8 pt-32">
           <div className="mx-auto max-w-6xl">
             <DocumentAnalysis
               analysis={analysis}
               documentText={documentText}
               onReset={handleReset}
+              activeTab={activeTab}
             />
           </div>
         </main>
