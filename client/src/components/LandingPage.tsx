@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Scale,
   Users,
@@ -15,7 +15,6 @@ import {
   Award,
   Target,
 } from "lucide-react";
-import { Button } from "./ui/button";
 import { Footer } from "./Footer";
 
 interface LandingPageProps {
@@ -30,22 +29,53 @@ interface FAQ {
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
 
+  // Custom hook for scroll animations
+  const useScrollAnimation = () => {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        },
+        { threshold: 0.3 }
+      );
+
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+
+      return () => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      };
+    }, []);
+
+    return [ref, isVisible] as const;
+  };
+
+  const [aboutRef, aboutVisible] = useScrollAnimation();
+
   const stats = [
     {
-      icon: <FileText className="h-8 w-8 text-primary" />,
+      icon: <FileText className="h-6 w-6 text-white" />,
       number: "10K+",
       label: "Documents Analyzed",
       description: "Comprehensive analysis across various legal document types",
     },
     {
-      icon: <Star className="h-8 w-8 text-primary" />,
+      icon: <Star className="h-6 w-6 text-white" />,
       number: "5+",
       label: "Years of AI Excellence",
       description:
         "Cutting-edge AI technology refined over years of development",
     },
     {
-      icon: <Users className="h-8 w-8 text-primary" />,
+      icon: <Users className="h-6 w-6 text-white" />,
       number: "500+",
       label: "Satisfied Clients",
       description: "Individuals and businesses trusting our legal analysis",
@@ -134,124 +164,192 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div
+      className="min-h-screen bg-white"
+      style={{
+        backgroundImage: "url('/bg-img.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5" />
+        <div className="absolute inset-0" />
         <div className="container mx-auto max-w-6xl relative">
-          <div className="text-center space-y-8">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium geist-medium">
-              <Shield className="h-4 w-4" />
+          <div className="text-center space-y-6 mb-12">
+            <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium">
+              <Shield className="h-3 w-3" />
               SECURING YOUR LEGAL INTERESTS
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-foreground geist-bold leading-tight">
+            <h1 className="text-3xl md:text-5xl font-bold text-black leading-tight">
               Legal solutions for the{" "}
-              <span className="text-primary">digital age</span> that you can
+              <span className="text-gray-600">digital age</span> that you can
               trust
             </h1>
 
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed geist-regular">
+            <p className="text-base text-gray-700 max-w-2xl mx-auto leading-relaxed">
               Empower yourself with AI-driven legal document analysis. Get
               instant insights, risk assessments, and plain-language
               explanations to make informed decisions.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
                 onClick={onGetStarted}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 geist-medium"
+                className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors inline-flex items-center justify-center"
               >
                 Get Started
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-8 py-3 geist-medium"
-              >
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </button>
+              <button className="border border-black text-black hover:bg-black hover:text-white px-6 py-3 rounded-full text-sm font-medium transition-colors">
                 View Demo
-              </Button>
+              </button>
+            </div>
+          </div>
+
+          {/* Legal Images */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <img
+                src="/istockphoto-2193704550-612x612.webp"
+                alt="Legal justice and law concept"
+                className="w-full h-64 object-cover"
+              />
+            </div>
+            <div className="rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <img
+                src="/premium_photo-1698084059560-9a53de7b816b.avif"
+                alt="Legal scales and justice"
+                className="w-full h-64 object-cover"
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="py-20 px-4 bg-muted/30">
+      <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium geist-medium mb-6">
-              ABOUT US
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 geist-bold">
-              Who are we
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed geist-regular">
-              Our AI-powered platform is committed to providing expert,
-              client-focused legal document analysis across a range of practice
-              areas. With deep experience and a results-driven approach, we
-              deliver strategic solutions tailored to each client's needs.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="bg-card rounded-xl p-8 border border-border text-center hover:shadow-lg transition-all"
-              >
-                <div className="flex justify-center mb-4">{stat.icon}</div>
-                <div className="text-4xl font-bold text-foreground mb-2 geist-bold">
-                  {stat.number}
-                </div>
-                <div className="text-lg font-semibold text-foreground mb-2 geist-semibold">
-                  {stat.label}
-                </div>
-                <p className="text-muted-foreground text-sm geist-regular">
-                  {stat.description}
-                </p>
+          <div
+            ref={aboutRef}
+            className={`bg-black/80 rounded-3xl p-16 text-center transition-all duration-1000 ${
+              aboutVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+            }`}
+          >
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full text-sm font-medium mb-8">
+                ABOUT US
               </div>
-            ))}
+              <h2
+                className={`text-4xl md:text-5xl font-bold text-white mb-8 transition-all duration-1000 delay-300 ${
+                  aboutVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
+                }`}
+              >
+                Who are we
+              </h2>
+              <p
+                className={`text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 delay-500 ${
+                  aboutVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
+                }`}
+              >
+                <span className="text-white font-medium">
+                  Blackstone Legal Group is a Boston-based law firm offering
+                  family law, immigration services, and legal aid for vulnerable
+                  communities. Founded in 2017 by two partners with public
+                  sector backgrounds, the firm built a strong local reputation
+                  through backgrounds, the firm built a strong local reputation
+                  through referrals and word of mouth.
+                </span>
+              </p>
+            </div>
+
+            {/* <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: <Scale className="h-8 w-8" />,
+                  number: "235",
+                  label: "NUMBER OF CLIENTS",
+                },
+                {
+                  icon: <Star className="h-8 w-8" />,
+                  number: "12+",
+                  label: "YEARS OF EXPERIENCE",
+                },
+                {
+                  icon: <Users className="h-8 w-8" />,
+                  number: "19",
+                  label: "TEAM MEMBERS",
+                },
+              ].map((stat, index) => (
+                <div
+                  key={index}
+                  className={`bg-white rounded-2xl p-8 text-center hover:shadow-2xl transition-all duration-500 hover:scale-105 ${
+                    aboutVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-10"
+                  }`}
+                  style={{ transitionDelay: `${700 + index * 200}ms` }}
+                >
+                  <div className="flex justify-center mb-6">
+                    <div className="text-black p-4 bg-gray-100 rounded-2xl">
+                      {stat.icon}
+                    </div>
+                  </div>
+                  <div className="text-4xl font-bold text-black mb-3">
+                    {stat.number}
+                  </div>
+                  <div className="text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div> */}
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 px-4 bg-white/90">
+        <div className="container mx-auto max-w-4xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium geist-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium mb-4">
                 WHAT WE DO
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 geist-bold">
+              <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
                 Delivering practical solutions through{" "}
-                <span className="text-primary">trusted AI analysis</span>
+                <span className="text-gray-600">trusted AI analysis</span>
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed geist-regular">
+              <p className="text-sm text-gray-700 leading-relaxed">
                 Transform complex legal documents into clear, actionable
                 insights with our advanced AI technology. Make confident
                 decisions with comprehensive analysis and risk assessment.
               </p>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-4">
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="bg-muted/30 rounded-xl p-6 hover:bg-muted/50 transition-colors"
+                  className="bg-white rounded-2xl p-5 border border-gray-200 hover:shadow-lg transition-all"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 text-primary p-3 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-black text-white p-2 rounded-xl">
                       {feature.icon}
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-foreground mb-2 geist-semibold">
+                      <h3 className="text-sm font-semibold text-black mb-1">
                         {feature.title}
                       </h3>
-                      <p className="text-muted-foreground geist-regular">
+                      <p className="text-gray-600 text-xs">
                         {feature.description}
                       </p>
                     </div>
@@ -264,37 +362,37 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* Services Section */}
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium geist-medium mb-6">
+      <section className="py-16 px-4 bg-gradient-to-b from-white/90 to-transparent">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium mb-4">
               FEATURES
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 geist-bold">
+            <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
               Everything you need for{" "}
-              <span className="text-primary">cutting-edge</span> legal analysis
+              <span className="text-gray-600">cutting-edge</span> legal analysis
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed geist-regular">
+            <p className="text-sm text-gray-700 max-w-2xl mx-auto leading-relaxed">
               Comprehensive document analysis powered by advanced AI to help you
               understand and navigate complex legal agreements with confidence.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-card rounded-xl p-8 border border-border hover:shadow-lg transition-all"
+                className="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all"
               >
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 text-primary p-3 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="bg-black text-white p-2 rounded-xl">
                     {service.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3 geist-semibold">
+                    <h3 className="text-sm font-semibold text-black mb-2">
                       {service.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed geist-regular">
+                    <p className="text-gray-600 text-xs leading-relaxed">
                       {service.description}
                     </p>
                   </div>
@@ -306,49 +404,49 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 bg-card">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium geist-medium mb-6">
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-3xl">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium mb-4">
               ANSWERS FOR YOUR QUESTIONS
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 geist-bold">
+            <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
               Frequently asked questions
             </h2>
-            <p className="text-lg text-muted-foreground geist-regular">
+            <p className="text-sm text-gray-700">
               Find answers to common questions about our AI-powered legal
               document analysis service.
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="border border-border rounded-xl overflow-hidden"
+                className="border border-gray-200 rounded-2xl overflow-hidden bg-white"
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full flex items-center justify-between p-6 text-left hover:bg-muted/30 transition-colors"
+                  className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="bg-primary/10 text-primary w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold geist-semibold">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold">
                       {index + 1}
                     </div>
-                    <span className="text-lg font-semibold text-foreground geist-semibold">
+                    <span className="text-sm font-semibold text-black">
                       {faq.question}
                     </span>
                   </div>
                   {expandedFAQ === index ? (
-                    <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                    <ChevronUp className="h-4 w-4 text-gray-600" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                    <ChevronDown className="h-4 w-4 text-gray-600" />
                   )}
                 </button>
                 {expandedFAQ === index && (
-                  <div className="px-6 pb-6">
-                    <div className="pl-12">
-                      <p className="text-muted-foreground leading-relaxed geist-regular">
+                  <div className="px-5 pb-5">
+                    <div className="pl-9">
+                      <p className="text-gray-600 text-xs leading-relaxed">
                         {faq.answer}
                       </p>
                     </div>
@@ -361,29 +459,45 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
+      <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-12 text-center">
-            <div className="flex justify-center mb-6">
-              <div className="bg-primary/20 p-4 rounded-2xl">
-                <Scale className="h-12 w-12 text-primary" />
+          <div className="bg-black rounded-3xl p-12 relative overflow-hidden">
+            {/* Background Design SVG */}
+            <div className="absolute inset-0 opacity-20">
+              <img
+                src="/design.svg"
+                alt="Background Design"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Responsive grid layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8 items-center">
+                {/* Text content */}
+                <div className="lg:col-span-3 text-center lg:text-left">
+                  <h2 className="text-xl md:text-2xl font-bold text-white mb-3">
+                    Start analyzing your legal documents today
+                  </h2>
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    Join thousands of satisfied users who trust our AI-powered
+                    analysis for their legal document needs.
+                  </p>
+                </div>
+
+                {/* Button */}
+                <div className="lg:col-span-1 flex justify-center lg:justify-end">
+                  <button
+                    onClick={onGetStarted}
+                    className="bg-white hover:bg-gray-100 text-black px-6 lg:px-8 py-3 rounded-full text-sm lg:text-md font-medium transition-colors inline-flex items-center justify-center shadow-lg hover:shadow-xl whitespace-nowrap"
+                  >
+                    Get Started Now
+                    <ArrowRight className="h-4 lg:h-5 w-4 lg:w-5 ml-2" />
+                  </button>
+                </div>
               </div>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 geist-bold">
-              Start analyzing your legal documents today
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto geist-regular">
-              Join thousands of satisfied users who trust our AI-powered
-              analysis for their legal document needs.
-            </p>
-            <Button
-              size="lg"
-              onClick={onGetStarted}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 geist-medium"
-            >
-              Get Started Now
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
           </div>
         </div>
       </section>

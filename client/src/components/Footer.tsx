@@ -1,109 +1,93 @@
-import { Scale, Mail, Phone, MapPin } from "lucide-react";
-
 export function Footer() {
   const companyLinks = [
     { label: "About Us", href: "#" },
-    { label: "Meet the Team", href: "#" },
-    { label: "Insights", href: "#" },
+    { label: "How It Works", href: "#" },
+    { label: "Privacy Policy", href: "#" },
+    { label: "Terms of Service", href: "#" },
     { label: "Contact", href: "#" },
   ];
 
-  const serviceLinks = [
+  const featuresLinks = [
     { label: "Document Analysis", href: "#" },
     { label: "Risk Assessment", href: "#" },
+    { label: "AI-Powered Insights", href: "#" },
+    { label: "Plain Language Translation", href: "#" },
     { label: "Contract Review", href: "#" },
-    { label: "Legal Consulting", href: "#" },
   ];
+
   return (
-    <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
-          {/* Company Info */}
+    <footer className="bg-gray-50 border-t border-gray-200">
+      <div className="container mx-auto px-4 pt-16 pb-8">
+        <div className="grid lg:grid-cols-2 gap-8 mb">
+          {/* Company Logo and Info */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <Scale className="h-8 w-8 text-primary" />
-                <div className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full animate-pulse" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="Legality Logo"
+                className="h-8 w-8 object-contain"
+              />
               <div>
-                <h3 className="text-xl font-bold text-foreground geist-bold">
-                  Legality
-                </h3>
-                <p className="text-sm text-muted-foreground geist-regular">
+                <h3 className="text-xl font-bold text-black">Legality</h3>
+                <p className="text-sm text-gray-600">
                   AI-Powered Legal Analysis
                 </p>
               </div>
             </div>
-            <p className="text-muted-foreground geist-regular leading-relaxed">
-              Empowering individuals and businesses with intelligent legal
-              document analysis. Transform complex legal language into clear,
-              actionable insights.
+            <p className="text-gray-600 text-sm leading-relaxed">
+              Transform complex legal documents into clear, actionable insights
+              with our advanced AI technology. Make informed decisions with
+              confidence.
             </p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <span className="text-sm geist-regular">
-                  support@legality.ai
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <span className="text-sm geist-regular">+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span className="text-sm geist-regular">San Francisco, CA</span>
-              </div>
-            </div>
           </div>
 
           {/* Company Links */}
-          <div>
-            <h4 className="text-lg font-semibold text-foreground mb-6 geist-semibold">
-              Company
-            </h4>
-            <ul className="space-y-3">
-              {companyLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors geist-regular"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className="grid lg:grid-cols-2 gap-4 mb-12">
+            <div>
+              <h4 className="text-lg font-semibold text-black mb-6">Company</h4>
+              <ul className="space-y-3">
+                {companyLinks.map((link, index) => (
+                  <li key={index}>
+                    <a
+                      href={link.href}
+                      className="text-gray-600 hover:text-black transition-colors text-sm"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Services Links */}
-          <div>
-            <h4 className="text-lg font-semibold text-foreground mb-6 geist-semibold">
-              Services
-            </h4>
-            <ul className="space-y-3">
-              {serviceLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors geist-regular"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {/* Features Links */}
+            <div>
+              <h4 className="text-lg font-semibold text-black mb-6">
+                Features
+              </h4>
+              <ul className="space-y-3">
+                {featuresLinks.map((link, index) => (
+                  <li key={index}>
+                    <a
+                      href={link.href}
+                      className="text-gray-600 hover:text-black transition-colors text-sm"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-border pt-8">
+        <div className="border-t border-gray-200 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground geist-regular">
+            <p className="text-sm text-gray-600">
               © 2025 Legality. All rights reserved.
             </p>
-            <p className="text-sm text-muted-foreground geist-regular">
-              Made with ❤️ for better legal understanding
+            <p className="text-sm text-gray-600">
+              Empowering legal understanding through AI
             </p>
           </div>
         </div>
