@@ -254,12 +254,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   }`}
                 >
                   <span className="text-white font-medium">
-                    Blackstone Legal Group is a Boston-based law firm offering
-                    family law, immigration services, and legal aid for
-                    vulnerable communities. Founded in 2017 by two partners with
-                    public sector backgrounds, the firm built a strong local
-                    reputation through backgrounds, the firm built a strong
-                    local reputation through referrals and word of mouth.
+We are the creators of Legality, a project dedicated to applying specialized Large Language Models to the legal domain. Our goal is to build powerful, accessible AI tools that can reason over and simplify complex legal documents for everyone.
                   </span>
                 </p>
               </div>
