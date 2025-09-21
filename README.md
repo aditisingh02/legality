@@ -95,7 +95,7 @@ Since legal documents contain sensitive information, Legality is designed with p
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/legality.git
+   git clone https://github.com/aditisingh02/legality.git
    cd legality
    ```
 
@@ -133,6 +133,84 @@ Since legal documents contain sensitive information, Legality is designed with p
    npm run dev
    ```
 
+## Deployment
+
+### Production Deployment (Vercel + Render)
+
+#### Backend Deployment (Render)
+
+1. **Deploy to Render:**
+
+   - Connect your GitHub repository to Render
+   - Set the **Root Directory** to `server`
+   - Render will automatically detect the `render.yaml` configuration
+   - Set the following environment variables in Render:
+     - `GEMINI_API_KEY`: Your Google Gemini API key
+     - `NODE_ENV`: `production`
+
+2. **Get your Render API URL:**
+   - After deployment, copy your Render service URL (e.g., `https://legality-api.onrender.com`)
+
+#### Frontend Deployment (Vercel)
+
+1. **Deploy to Vercel:**
+
+   - Connect your GitHub repository to Vercel
+   - Set the **Root Directory** to `client`
+   - Set **Build Command** to `npm run build`
+   - Set **Output Directory** to `dist`
+
+2. **Configure Environment Variables in Vercel:**
+
+   - Go to your Vercel project settings → Environment Variables
+   - Add: `VITE_API_URL` = `https://your-render-app.onrender.com` (your Render URL)
+
+3. **Update CORS Configuration:**
+   - After Vercel deployment, update the CORS origins in `server/index.js`
+   - Replace the Vercel URLs with your actual deployment URLs
+
+#### Alternative: Vercel Serverless Functions
+
+If you prefer to deploy everything on Vercel:
+
+1. **Move API routes to Vercel functions:**
+   - Create `client/api/` directory
+   - Convert Express routes to Vercel serverless functions
+   - Update environment variables accordingly
+
+### Environment Variables
+
+#### Server (.env)
+
+```bash
+GEMINI_API_KEY=your_gemini_api_key_here
+NODE_ENV=production
+PORT=10000
+```
+
+#### Client (.env.local)
+
+```bash
+VITE_API_URL=https://your-render-app.onrender.com
+```
+
+### Post-Deployment Steps
+
+1. **Test the application:**
+
+   - Upload a test document
+   - Verify API calls work correctly
+   - Check that Q&A functionality works
+
+2. **Monitor logs:**
+
+   - Check Render logs for backend errors
+   - Check Vercel function logs for frontend issues
+
+3. **Performance optimization:**
+   - Monitor API response times
+   - Consider implementing caching if needed
+
 ## Contributing
 
 We welcome contributions! Please see our Contributing Guidelines for details.
@@ -146,11 +224,6 @@ We welcome contributions! Please see our Contributing Guidelines for details.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-- Email: support@legality.app
-- Documentation: docs.legality.app
 
 ---
 

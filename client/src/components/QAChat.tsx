@@ -3,6 +3,8 @@ import { Send, MessageCircle, Loader2, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 interface QAChatProps {
   documentText: string;
 }
@@ -31,16 +33,13 @@ export function QAChat({ documentText }: QAChatProps) {
       }
 
       try {
-        const response = await fetch(
-          "http://localhost:3001/api/generate-questions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ documentText }),
-          }
-        );
+        const response = await fetch(`${API_URL}/api/generate-questions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ documentText }),
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -115,7 +114,7 @@ export function QAChat({ documentText }: QAChatProps) {
     setTimeout(scrollToBottom, 50);
 
     try {
-      const response = await fetch("http://localhost:3001/api/ask-question", {
+      const response = await fetch(`${API_URL}/api/ask-question`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

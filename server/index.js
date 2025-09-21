@@ -56,6 +56,22 @@ const upload = multer({
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 
+// Root endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "🚀 Legality API Server",
+    status: "running",
+    version: "1.0.0",
+    endpoints: {
+      health: "/health",
+      analyzeDocument: "/api/analyze-document",
+      askQuestion: "/api/ask-question",
+      generateQuestions: "/api/generate-questions",
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({

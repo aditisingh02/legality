@@ -496,7 +496,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 <div className="lg:col-span-1 flex justify-center lg:justify-end">
                   <button
                     onClick={onGetStarted}
-                    className="bg-white hover:bg-gray-100 text-black px-6 lg:px-8 py-3 rounded-full text-sm lg:text-md font-medium transition-colors inline-flex items-center justify-center shadow-lg hover:shadow-xl whitespace-nowrap"
+                    className="bg-white hover:bg-gray-100 text-black px-6 lg:px-8 py-3 rounded-full text-sm lg:text-md font-medium transition-colors inline-flex items-center justify-center shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer"
                   >
                     Get Started Now
                     <ArrowRight className="h-4 lg:h-5 w-4 lg:w-5 ml-2" />

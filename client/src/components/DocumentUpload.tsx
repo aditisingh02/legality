@@ -3,6 +3,8 @@ import { Upload, FileText, Loader2, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
 import type { DocumentAnalysisResult } from "../types";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 interface DocumentUploadProps {
   onAnalysisComplete: (
     analysis: DocumentAnalysisResult,
@@ -55,13 +57,10 @@ export function DocumentUpload({
     formData.append("document", file);
 
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/analyze-document",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${API_URL}/api/analyze-document`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error("Failed to analyze document");
@@ -83,16 +82,13 @@ export function DocumentUpload({
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/analyze-document",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ text: textInput }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/analyze-document`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: textInput }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to analyze document");
