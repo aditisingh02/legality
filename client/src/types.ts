@@ -15,5 +15,13 @@ export interface DocumentAnalysisResult {
     definition: string;
     context: string;
   }>;
+  recommendations: Array<{
+    riskId: number;
+    riskLevel: "HIGH" | "MEDIUM" | "LOW";
+    title: string;
+    description: string;
+    actionSteps: string[];
+    priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW";
+  }>;
   documentLength: number;
 }
