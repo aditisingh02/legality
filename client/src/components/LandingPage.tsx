@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Scale,
-  Users,
-  Star,
   FileText,
   Shield,
   Brain,
@@ -16,6 +14,7 @@ import {
   Target,
 } from "lucide-react";
 import { Footer } from "./Footer";
+import { Navbar } from "./Navbar";
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -59,28 +58,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
   };
 
   const [aboutRef, aboutVisible] = useScrollAnimation();
-
-  const stats = [
-    {
-      icon: <FileText className="h-6 w-6 text-white" />,
-      number: "10K+",
-      label: "Documents Analyzed",
-      description: "Comprehensive analysis across various legal document types",
-    },
-    {
-      icon: <Star className="h-6 w-6 text-white" />,
-      number: "5+",
-      label: "Years of AI Excellence",
-      description:
-        "Cutting-edge AI technology refined over years of development",
-    },
-    {
-      icon: <Users className="h-6 w-6 text-white" />,
-      number: "500+",
-      label: "Satisfied Clients",
-      description: "Individuals and businesses trusting our legal analysis",
-    },
-  ];
 
   const features = [
     {
@@ -173,8 +150,11 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         backgroundAttachment: "fixed",
       }}
     >
+      {/* Glass Navbar */}
+      <Navbar onGetStarted={onGetStarted} />
+
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
+      <section id="hero" className="relative py-20 px-4 overflow-hidden pt-32">
         <div className="absolute inset-0" />
         <div className="container mx-auto max-w-6xl relative">
           <div className="text-center space-y-6 mb-12">
@@ -230,7 +210,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* About Section */}
-      <section className="py-20 px-4">
+      <section id="about" className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div
             ref={aboutRef}
@@ -317,7 +297,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 bg-white/90">
+      <section id="features" className="py-16 px-4 bg-white/90">
         <div className="container mx-auto max-w-4xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -362,7 +342,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 px-4 bg-gradient-to-b from-white/90 to-transparent">
+      <section
+        id="services"
+        className="py-16 px-4 bg-gradient-to-b from-white/90 to-transparent"
+      >
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium mb-4">
@@ -404,7 +387,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 px-4">
+      <section id="faq" className="py-16 px-4">
         <div className="container mx-auto max-w-3xl">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-xs font-medium mb-4">
