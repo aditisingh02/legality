@@ -1,7 +1,21 @@
 import mammoth from "mammoth";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse");
+
+// Dynamic import for pdf-parse to avoid ES module issues
+let pdfParse;
+
+async function loadPdfParse() {
+  if (!pdfParse) {
+    try {
+      const { createRequire } = await import("module");
+      const require = createRequire(import.meta.url);
+      pdfParse = require("pdf-parse");
+    } catch (error) {
+      console.error("Error loading pdf-parse:", error);
+      throw new Error("PDF parsing library not available");
+    }
+  }
+  return pdfParse;
+}
 
 export async function extractTextFromFile(file) {
   const { buffer, mimetype, originalname } = file;
@@ -32,7 +46,8 @@ export async function extractTextFromFile(file) {
 
 async function extractFromPDF(buffer) {
   try {
-    const data = await pdfParse(buffer, {
+    const pdfParseModule = await loadPdfParse();
+    const data = await pdfParseModule(buffer, {
       // Options to improve text extraction quality
       normalizeWhitespace: true,
       disableCombineTextItems: false,
@@ -46,6 +61,7 @@ async function extractFromPDF(buffer) {
 
     return data.text;
   } catch (error) {
+    console.error("PDF extraction error:", error);
     throw new Error(`PDF parsing failed: ${error.message}`);
   }
 }
