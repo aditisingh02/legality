@@ -5,6 +5,7 @@ import {
   FileText,
   HelpCircle,
   BookOpen,
+  Lightbulb,
 } from "lucide-react";
 import { useTheme } from "./ui/theme-provider";
 import { Button } from "./ui/button";
@@ -27,6 +28,7 @@ export function Header({
   const tabs = [
     { id: "summary", label: "Summary", icon: FileText },
     { id: "risk", label: "Risk Assessment", icon: Shield },
+    { id: "recommendations", label: "Recommendations", icon: Lightbulb },
     { id: "glossary", label: "Glossary", icon: BookOpen },
     { id: "questions", label: "Ask Questions", icon: HelpCircle },
   ];

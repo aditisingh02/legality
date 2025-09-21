@@ -10,10 +10,14 @@ export async function analyzeDocument(genAI, documentText) {
   // Extract glossary terms
   const glossary = await extractGlossary(model, documentText);
 
+  // Generate risk mitigation recommendations if risks are found
+  const recommendations = await generateRiskMitigations(model, documentText, riskAssessment.risks);
+
   return {
     summary,
     riskAssessment,
     glossary,
+    recommendations,
     documentLength: documentText.length,
   };
 }
@@ -183,4 +187,60 @@ function getRiskLevel(score) {
   if (score >= 60) return "HIGH";
   if (score >= 30) return "MEDIUM";
   return "LOW";
+}
+
+async function generateRiskMitigations(model, documentText, risks) {
+  if (!risks || risks.length === 0) {
+    return [];
+  }
+
+  const prompt = `Based on the following identified risks in a legal document, provide specific, actionable recommendations to mitigate each risk. Focus on practical steps the user can take.
+
+Document: ${documentText}
+
+Identified Risks:
+${risks.map((risk, index) => `${index + 1}. ${risk.riskLevel} RISK: ${risk.clause} - ${risk.explanation}`).join('\n')}
+
+For each risk, provide a mitigation recommendation with:
+1. Risk ID: The number of the risk (1, 2, 3, etc.)
+2. Title: Brief, action-oriented title for the recommendation
+3. Description: Detailed explanation of the mitigation strategy (use **bold** for key actions, *italics* for legal terms)
+4. Action Steps: 3-5 specific steps the user should take
+5. Priority: URGENT, HIGH, MEDIUM, or LOW based on risk level
+
+Format as JSON array:
+[
+  {
+    "riskId": 1,
+    "title": "Action-oriented recommendation title",
+    "description": "Detailed mitigation strategy with **bold** key actions and *italic* legal terms",
+    "actionSteps": ["Step 1", "Step 2", "Step 3"],
+    "priority": "URGENT|HIGH|MEDIUM|LOW"
+  }
+]
+
+Make recommendations practical and specific to this document. Respond with ONLY the JSON array:`;
+
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  let text = response.text();
+
+  // Clean up the response to extract JSON
+  text = text
+    .replace(/```json\n?/g, "")
+    .replace(/```\n?/g, "")
+    .trim();
+
+  try {
+    const recommendations = JSON.parse(text);
+    
+    // Add risk level to each recommendation based on the original risk
+    return recommendations.map(rec => ({
+      ...rec,
+      riskLevel: risks[rec.riskId - 1]?.riskLevel || "LOW"
+    }));
+  } catch (error) {
+    console.error("Error parsing risk mitigations:", error);
+    return [];
+  }
 }
