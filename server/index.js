@@ -147,7 +147,7 @@ app.post("/api/ask-question", async (req, res) => {
         .json({ error: "Question and document text are required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `Based ONLY on the following legal document, answer this question: "${question}"
 
@@ -202,7 +202,7 @@ app.post("/api/generate-questions", async (req, res) => {
       return res.status(400).json({ error: "Document text is required" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `Based on this legal document, generate 5 specific, relevant questions that someone should ask to better understand their obligations and rights.
 

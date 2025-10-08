@@ -1,5 +1,5 @@
 export async function analyzeDocument(genAI, documentText) {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   // Generate summary
   const summary = await generateSummary(model, documentText);
@@ -11,7 +11,11 @@ export async function analyzeDocument(genAI, documentText) {
   const glossary = await extractGlossary(model, documentText);
 
   // Generate risk mitigation recommendations if risks are found
-  const recommendations = await generateRiskMitigations(model, documentText, riskAssessment.risks);
+  const recommendations = await generateRiskMitigations(
+    model,
+    documentText,
+    riskAssessment.risks
+  );
 
   return {
     summary,
@@ -199,7 +203,14 @@ async function generateRiskMitigations(model, documentText, risks) {
 Document: ${documentText}
 
 Identified Risks:
-${risks.map((risk, index) => `${index + 1}. ${risk.riskLevel} RISK: ${risk.clause} - ${risk.explanation}`).join('\n')}
+${risks
+  .map(
+    (risk, index) =>
+      `${index + 1}. ${risk.riskLevel} RISK: ${risk.clause} - ${
+        risk.explanation
+      }`
+  )
+  .join("\n")}
 
 For each risk, provide a mitigation recommendation with:
 1. Risk ID: The number of the risk (1, 2, 3, etc.)
@@ -233,11 +244,11 @@ Make recommendations practical and specific to this document. Respond with ONLY 
 
   try {
     const recommendations = JSON.parse(text);
-    
+
     // Add risk level to each recommendation based on the original risk
-    return recommendations.map(rec => ({
+    return recommendations.map((rec) => ({
       ...rec,
-      riskLevel: risks[rec.riskId - 1]?.riskLevel || "LOW"
+      riskLevel: risks[rec.riskId - 1]?.riskLevel || "LOW",
     }));
   } catch (error) {
     console.error("Error parsing risk mitigations:", error);
